@@ -7,7 +7,7 @@ services:
       - ./frontend:/app
 
   backend:
-    build: ./backend-api
+    build: ./backend
     ports: 
       - '80:80'
     volumes:
