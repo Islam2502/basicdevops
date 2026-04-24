@@ -1,0 +1,17 @@
+services:
+  frontend:
+    build:  ./frontend
+    ports: 
+      - '8000:8000'
+    volumes:
+      - ./frontend:/app
+
+  backend:
+    build: ./backend-api
+    ports: 
+      - '80:80'
+    volumes:
+      - /app/__pycache__
+      - /app/venv
+      - ./backend:/app
+    

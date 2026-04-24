@@ -1,6 +1,8 @@
 FROM node:18
 WORKDIR /app
 
+EXPOSE 8000
+
 COPY package.json package.json
 COPY package-lock.json package-lock.json
 
