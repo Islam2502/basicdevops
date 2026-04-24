@@ -1,17 +1,46 @@
+version: '3.8'
+
+volumes:
+  pg_data:
+  static:
+  media:
+
 services:
-  frontend:
-    build:  ./frontend
-    ports: 
-      - '8000:8000'
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    env_file:
+      - .env
     volumes:
-      - ./frontend:/app
+      - pg_data:/var/lib/postgresql/data
 
   backend:
     build: ./backend
-    ports: 
-      - '80:80'
+    container_name: backend
+    env_file:
+      - .env
     volumes:
-      - /app/__pycache__
-      - /app/venv
-      - ./backend:/app
-    
+      - static:/backend_static
+      - media:/app/media
+    depends_on:
+      - postgres
+    expose:
+      - "8000"
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    volumes:
+      - static:/app/build
+
+  gateway:
+    build: ./nginx
+    container_name: gateway
+    ports:
+      - "80:80"
+    volumes:
+      - static:/static
+      - media:/media
+    depends_on:
+      - backend
+      - frontend
