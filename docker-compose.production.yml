@@ -15,7 +15,7 @@ services:
       - pg_data:/var/lib/postgresql/data
 
   backend:
-    build: ./backend
+    image: ${DOCKERHUB_USER}/kittygram_backend:latest
     container_name: backend
     env_file:
       - .env
@@ -28,13 +28,13 @@ services:
       - "8000"
 
   frontend:
-    build: ./frontend
+    image: ${DOCKERHUB_USER}/kittygram_frontend:latest
     container_name: frontend
     volumes:
       - static:/app/build
 
   gateway:
-    build: ./nginx
+    image: ${DOCKERHUB_USER}/kittygram_gateway:latest
     container_name: gateway
     ports:
       - "80:80"
