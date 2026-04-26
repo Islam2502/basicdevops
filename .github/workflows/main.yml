@@ -126,16 +126,17 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd /var/app/basicdevops
+            git pull origin main
+            
+            sudo docker compose -f docker-compose.production.yml pull
 
-            sudo docker compose pull
+            sudo docker compose -f docker-compose.production.yml down
+            sudo docker compose -f docker-compose.production.yml up -d --force-recreate
 
-            sudo docker compose down
-            sudo docker compose up -d
+            sudo docker compose -f docker-compose.production.yml exec -T backend python manage.py migrate
+            sudo docker compose -f docker-compose.production.yml exec -T backend python manage.py collectstatic --noinput
 
-            sudo docker compose exec -T backend python manage.py migrate
-            sudo docker compose exec -T backend python manage.py collectstatic --noinput
-
-            sudo docker compose restart gateway
+            sudo docker compose -f docker-compose.production.yml restart gateway
 
   auto_test:
     runs-on: ubuntu-latest
